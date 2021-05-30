@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Open Sans', sans-serif, Helvetica, Arial;
+  font-size: 16px;
+  font-weight: 300;
+  color: #00112c;
+}
+
+h1 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  color: #0abf53;
+  font-weight: 400;
+}
+
+h3 {
+  font-weight: 400;
+}
+
+a {
+  color: #0abf53;
+}
