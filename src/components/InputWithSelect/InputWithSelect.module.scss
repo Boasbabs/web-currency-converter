@@ -1,0 +1,35 @@
+.InputWithSelect {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.input {
+  background: transparent;
+  border-radius: 6px;
+  border: 1px solid #dfe1e5;
+  color: #70757a;
+  padding: 0.25rem;
+  height: 35px;
+  width: 9rem;
+}
+
+.select {
+  border: 1px solid #dfe1e5;
+  border-radius: 6px;
+  margin-left: 0.5rem;
+  padding: 0.25rem;
+  color: #70757a;
+  height: 35px !important;
+  width: 7rem;
+
+  option {
+    font-size: 13px;
+    list-style: none;
+    text-align: left;
+  }
+}
