@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useToasts } from 'react-toast-notifications';
+
 import { InputWithSelect } from 'components';
 import './App.css';
 
@@ -14,6 +15,7 @@ function App() {
   const [targetCurrency, setTargetCurrency] = useState('');
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [amountInSourceCurrency, setAmountInSourceCurrency] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   let targetAmount, sourceAmount;
   if (amountInSourceCurrency) {
@@ -35,30 +37,63 @@ function App() {
   };
 
   useEffect(() => {
-    fetch(`${BASE_URL}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const firstCurrency = Object.keys(data.rates)[0];
-        setCurrencyOptions([...Object.keys(data.rates)]);
-        setSourceCurrency(data.base);
-        setTargetCurrency(firstCurrency);
-        setExchangeRate(data.rates[firstCurrency]);
-      })
-      .catch((errors) => {
-        addToast(
-          errors?.response?.data?.message ||
-            errors?.message ||
-            'Something went wrong!',
-          { appearance: 'error' }
-        );
-      });
+    const fetchCurrencyDesc = async () => {
+      setIsLoading(true);
+      await fetch(
+        `http://api.exchangeratesapi.io/v1/symbols?access_key=${API_KEY}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setCurrencyOptions([...Object.entries(data.symbols)]);
+          setIsLoading(false);
+        })
+        .catch((errors) => {
+          setIsLoading(false);
+          addToast(
+            errors?.response?.data?.message ||
+              errors?.message ||
+              'Something went wrong!',
+            { appearance: 'error' }
+          );
+        });
+    };
+    fetchCurrencyDesc();
   }, []);
 
   useEffect(() => {
+    const fetchCurrencyRates = async () => {
+      setIsLoading(true);
+
+      await fetch(`${BASE_URL}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const firstCurrency = Object.keys(data.rates)[0];
+          setSourceCurrency(data.base);
+          setTargetCurrency(firstCurrency);
+          setExchangeRate(data.rates[firstCurrency]);
+          setIsLoading(false);
+        })
+        .catch((errors) => {
+          setIsLoading(false);
+
+          addToast(
+            errors?.response?.data?.message ||
+              errors?.message ||
+              'Something went wrong!',
+            { appearance: 'error' }
+          );
+        });
+    };
+    fetchCurrencyRates();
+  }, [addToast, currencyOptions]);
+
+  useEffect(() => {
     if (sourceCurrency != null && targetCurrency != null) {
+      setIsLoading(true);
       fetch(`${BASE_URL}&base=${sourceCurrency}&symbols=${targetCurrency}`)
         .then((res) => res.json())
         .then((data) => {
+          setIsLoading(false);
           if (data.error) {
             addToast(data.error.message, { appearance: 'warning' });
           } else {
@@ -66,6 +101,7 @@ function App() {
           }
         })
         .catch((errors) => {
+          setIsLoading(false);
           addToast(
             errors?.response?.data?.message ||
               errors?.message ||
@@ -76,37 +112,50 @@ function App() {
     }
   }, [sourceCurrency, targetCurrency]);
 
-
   return (
-    <div className="App">
-      <h1>Web Currency Converter</h1>
-      <h3>{`1 ${sourceCurrency} equals ${exchangeRate} ${targetCurrency}`}</h3>
-      <hr />
-      <br />
-      <InputWithSelect
-        label={'Source Currency'}
-        amount={sourceAmount}
-        currencyOptions={currencyOptions}
-        selectedCurrency={sourceCurrency}
-        handleInputChange={handleSourceAmountChange}
-        handleCurrencyChange={(e) => setSourceCurrency(e.target.value)}
-      />
-      <br />
-      <InputWithSelect
-        label={'Target Currency'}
-        amount={targetAmount}
-        currencyOptions={currencyOptions}
-        selectedCurrency={targetCurrency}
-        handleInputChange={handleTargetAmountChange}
-        handleCurrencyChange={(e) => setTargetCurrency(e.target.value)}
-      />
+    <main className="App">
+      <section>
+        <h1>Web Currency Converter</h1>
 
-      <small>
-        Data provided by{' '}
-        <a href="https://exchangeratesapi.io/">Exchangerates API</a> for
-        Currency{' '}
-      </small>
-    </div>
+        {isLoading ? (
+          <p className="info-text">Loading ...</p>
+        ) : (
+          <section>
+            <p className="info-text">{`1 ${sourceCurrency} equals ${exchangeRate} ${targetCurrency}`}</p>
+            <small className="info-text-date">As at: {`${new Date().toUTCString()}`}</small>
+          </section>
+        )}
+        <hr />
+      </section>
+
+      <section className="input-wrapper">
+        <InputWithSelect
+          label={'Source Currency'}
+          amount={sourceAmount}
+          currencyOptions={currencyOptions}
+          selectedCurrency={sourceCurrency}
+          handleInputChange={handleSourceAmountChange}
+          handleCurrencyChange={(e) => setSourceCurrency(e.target.value)}
+        />
+        <br />
+        <InputWithSelect
+          label={'Target Currency'}
+          amount={targetAmount}
+          currencyOptions={currencyOptions}
+          selectedCurrency={targetCurrency}
+          handleInputChange={handleTargetAmountChange}
+          handleCurrencyChange={(e) => setTargetCurrency(e.target.value)}
+        />
+      </section>
+
+      <section>
+        <small>
+          Data provided by{' '}
+          <a href="https://exchangeratesapi.io/">Exchangerates API</a> for
+          Currency{' '}
+        </small>
+      </section>
+    </main>
   );
 }
 

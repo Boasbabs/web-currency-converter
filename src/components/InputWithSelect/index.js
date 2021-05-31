@@ -5,8 +5,8 @@ const InputWithSelect = ({ amount, label, currencyOptions, selectedCurrency, han
   const showCurrencyOptions = () => {
     return currencyOptions.length > 0 ? (
       currencyOptions.map((currency) => (
-        <option key={currency} value={currency}>
-          {currency}
+        <option key={currency[0]} value={currency[0]}>
+          {currency[1]}
         </option>
       ))
     ) : (

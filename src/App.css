@@ -24,3 +24,17 @@ h3 {
 a {
   color: #0abf53;
 }
+
+.input-wrapper {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.info-text {
+  margin-top: 1.5rem;
+  line-height: 0.5;
+}
+.info-text-date {
+  margin-top: 0.5rem;
+  font-size: 12px;
+}
