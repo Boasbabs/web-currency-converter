@@ -5,7 +5,7 @@ const InputWithSelect = ({ amount, label, currencyOptions, selectedCurrency, han
   const showCurrencyOptions = () => {
     return currencyOptions.length > 0 ? (
       currencyOptions.map((currency) => (
-        <option key={currency[0]} value={currency[0]}>
+        <option data-testid="select-option" key={currency[0]} value={currency[0]}>
           {currency[1]}
         </option>
       ))
@@ -22,15 +22,17 @@ const InputWithSelect = ({ amount, label, currencyOptions, selectedCurrency, han
       <input
         name="currencyAmount"
         value={amount}
+        placeholder={label}
         type="number"
-        aria-label="Currency Amount Field"
+        aria-label={`${label} Amount Field`}
         className={styles.input}
         onChange={handleInputChange}
       />
       <select
         name="currencyType"
         id="currencyType"
-        aria-label="Currency Type"
+        data-testid={`${label} Select`}
+        aria-label={`${label} Select`}
         className={styles.select}
         value={selectedCurrency}
         onChange={handleCurrencyChange}
