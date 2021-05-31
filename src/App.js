@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 import { useToasts } from 'react-toast-notifications';
 
 import { InputWithSelect } from 'components';
+import { FETCH_SYMBOLS_URL, FETCH_CURRENCIES_URL } from './constants';
 import './App.css';
-
-const API_KEY = '3ae66e45c814cec3d85720c651da34b3';
-const BASE_URL = `http://api.exchangeratesapi.io/v1/latest?access_key=${API_KEY}`;
 
 function App() {
   const { addToast } = useToasts();
@@ -36,61 +34,63 @@ function App() {
     setAmountInSourceCurrency(false);
   };
 
+  const fetchCurrenciesFullname = async () => {
+    setIsLoading(true);
+    await fetch(FETCH_SYMBOLS_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrencyOptions([...Object.entries(data.symbols)]);
+        setIsLoading(false);
+      })
+      .catch((errors) => {
+        setIsLoading(false);
+        addToast(
+          errors?.response?.data?.message ||
+            errors?.message ||
+            'Something went wrong!',
+          { appearance: 'error' }
+        );
+      });
+  };
+
+  const fetchCurrencyRates = async () => {
+    setIsLoading(true);
+
+    await fetch(FETCH_CURRENCIES_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        const firstCurrency = Object.keys(data.rates)[0];
+        setSourceCurrency(data.base);
+        setTargetCurrency(firstCurrency);
+        setExchangeRate(data.rates[firstCurrency]);
+        setIsLoading(false);
+      })
+      .catch((errors) => {
+        setIsLoading(false);
+
+        addToast(
+          errors?.response?.data?.message ||
+            errors?.message ||
+            'Something went wrong!',
+          { appearance: 'error' }
+        );
+      });
+  };
+
   useEffect(() => {
-    const fetchCurrencyDesc = async () => {
-      setIsLoading(true);
-      await fetch(
-        `http://api.exchangeratesapi.io/v1/symbols?access_key=${API_KEY}`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setCurrencyOptions([...Object.entries(data.symbols)]);
-          setIsLoading(false);
-        })
-        .catch((errors) => {
-          setIsLoading(false);
-          addToast(
-            errors?.response?.data?.message ||
-              errors?.message ||
-              'Something went wrong!',
-            { appearance: 'error' }
-          );
-        });
-    };
-    fetchCurrencyDesc();
+    fetchCurrenciesFullname();
   }, []);
 
   useEffect(() => {
-    const fetchCurrencyRates = async () => {
-      setIsLoading(true);
-
-      await fetch(`${BASE_URL}`)
-        .then((response) => response.json())
-        .then((data) => {
-          const firstCurrency = Object.keys(data.rates)[0];
-          setSourceCurrency(data.base);
-          setTargetCurrency(firstCurrency);
-          setExchangeRate(data.rates[firstCurrency]);
-          setIsLoading(false);
-        })
-        .catch((errors) => {
-          setIsLoading(false);
-
-          addToast(
-            errors?.response?.data?.message ||
-              errors?.message ||
-              'Something went wrong!',
-            { appearance: 'error' }
-          );
-        });
-    };
     fetchCurrencyRates();
   }, [addToast, currencyOptions]);
 
   useEffect(() => {
     if (sourceCurrency != null && targetCurrency != null) {
       setIsLoading(true);
-      fetch(`${BASE_URL}&base=${sourceCurrency}&symbols=${targetCurrency}`)
+      fetch(
+        `${FETCH_CURRENCIES_URL}&base=${sourceCurrency}&symbols=${targetCurrency}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setIsLoading(false);
@@ -122,7 +122,9 @@ function App() {
         ) : (
           <section>
             <p className="info-text">{`1 ${sourceCurrency} equals ${exchangeRate} ${targetCurrency}`}</p>
-            <small className="info-text-date">As at: {`${new Date().toUTCString()}`}</small>
+            <small className="info-text-date">
+              As at: {`${new Date().toUTCString()}`}
+            </small>
           </section>
         )}
         <hr />
@@ -149,6 +151,12 @@ function App() {
       </section>
 
       <section>
+        <p>
+          <small>
+            <strong>NOTE: </strong> 'EURO' is the only Source currency supported due to
+            the API Free tier plan
+          </small>
+        </p>
         <small>
           Data provided by{' '}
           <a href="https://exchangeratesapi.io/">Exchangerates API</a> for

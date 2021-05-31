@@ -2,12 +2,21 @@ body {
   margin: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
+
   min-height: 100vh;
   font-family: 'Open Sans', sans-serif, Helvetica, Arial;
   font-size: 16px;
   font-weight: 300;
   color: #00112c;
+}
+
+.App {
+  width: 450px;
+  margin-top: 3rem;
+  border: 1px solid #00112c;
+  padding: 1.5rem;
+  border-radius: 6px;
 }
 
 h1 {
@@ -37,4 +46,21 @@ a {
 .info-text-date {
   margin-top: 0.5rem;
   font-size: 12px;
+}
+
+/* MEDIA QUERIES */
+
+@media (max-width: 480px) {
+
+  .App {
+    width: 80vw;
+    margin-top: 3rem;
+    border: none;
+    padding: 1.5rem;
+    border-radius: 6px;
+  }
+
+  .text {
+    font-size: 16px;
+  }
 }

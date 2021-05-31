@@ -16,7 +16,7 @@
   color: #70757a;
   padding: 0.25rem;
   height: 35px;
-  width: 9rem;
+  width: 45%;
 }
 
 .select {
@@ -26,11 +26,22 @@
   padding: 0.25rem;
   color: #70757a;
   height: 46px;
-  width: 7rem;
+  width: 45%;
 
   option {
     font-size: 13px;
     list-style: none;
     text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .input {
+    width: 45%;
+  }
+
+  .select {
+    margin-left: 0.5rem;
+    width: 45%;
   }
 }
