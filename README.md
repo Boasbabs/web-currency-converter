@@ -2,6 +2,8 @@
 
 A web-based currency converter, using a foreign exchange rate API as a source of truth for the conversion. 
 
+Hosted on: [adeyemi.currency_converter.surge.sh](http://adeyemi.currency_converter.surge.sh)
+
 By [Adeyemi Babalola](mailto:babalolasimeon@gmail.com)
 
 
@@ -19,7 +21,13 @@ By [Adeyemi Babalola](mailto:babalolasimeon@gmail.com)
 
 ## Discussion
 
-I used the following technologies: HTML, CSS, React, Jest, and React Testing Library.
+I used the following technologies: 
+- HTML, 
+- CSS, 
+- React,
+- Jest, 
+- React Testing Library.
+
 I used [create-react-app](https://goo.gl/26jfy4)
 to generate the scaffolding for this app.
 
