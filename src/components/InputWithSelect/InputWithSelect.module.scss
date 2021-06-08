@@ -1,13 +1,14 @@
 .InputWithSelect {
   margin-top: 5px;
   margin-bottom: 10px;
+
+  &__label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
 }
 
-.label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 14px;
-}
 
 .input {
   background: transparent;

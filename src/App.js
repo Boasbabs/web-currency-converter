@@ -3,7 +3,7 @@ import { useToasts } from 'react-toast-notifications';
 
 import { InputWithSelect } from 'components';
 import { FETCH_SYMBOLS_URL, FETCH_CURRENCIES_URL } from './constants';
-import './App.css';
+import styles from './App.module.scss';
 
 function App() {
   const { addToast } = useToasts();
@@ -36,45 +36,43 @@ function App() {
 
   const fetchCurrenciesFullname = async () => {
     setIsLoading(true);
-    await fetch(FETCH_SYMBOLS_URL)
-      .then((response) => response.json())
-      .then((data) => {
-        setCurrencyOptions([...Object.entries(data.symbols)]);
-        setIsLoading(false);
-      })
-      .catch((errors) => {
-        setIsLoading(false);
-        addToast(
-          errors?.response?.data?.message ||
-            errors?.message ||
-            'Something went wrong!',
-          { appearance: 'error' }
-        );
-      });
+
+    try {
+      const response = await fetch(FETCH_SYMBOLS_URL);
+      const data = await response.json();
+      setCurrencyOptions(Object.entries(data.symbols));
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      addToast(
+        error.response?.data?.message ||
+          error.message ||
+          'Something went wrong!',
+        { appearance: 'error' }
+      );
+    }
   };
 
   const fetchCurrencyRates = async () => {
     setIsLoading(true);
 
-    await fetch(FETCH_CURRENCIES_URL)
-      .then((response) => response.json())
-      .then((data) => {
-        const firstCurrency = Object.keys(data.rates)[0];
-        setSourceCurrency(data.base);
-        setTargetCurrency(firstCurrency);
-        setExchangeRate(data.rates[firstCurrency]);
-        setIsLoading(false);
-      })
-      .catch((errors) => {
-        setIsLoading(false);
-
-        addToast(
-          errors?.response?.data?.message ||
-            errors?.message ||
-            'Something went wrong!',
-          { appearance: 'error' }
-        );
-      });
+    try {
+      const response = await fetch(FETCH_CURRENCIES_URL);
+      const data = await response.json();
+      const firstCurrency = Object.keys(data.rates)[0];
+      setSourceCurrency(data.base);
+      setTargetCurrency(firstCurrency);
+      setExchangeRate(data.rates[firstCurrency]);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      addToast(
+        error.response?.data?.message ||
+          error.message ||
+          'Something went wrong!',
+        { appearance: 'error' }
+      );
+    }
   };
 
   useEffect(() => {
@@ -113,7 +111,7 @@ function App() {
   }, [sourceCurrency, targetCurrency]);
 
   return (
-    <main className="App">
+    <main className={styles.App}>
       <section>
         <h1>Web Currency Converter</h1>
 
@@ -130,7 +128,7 @@ function App() {
         <hr />
       </section>
 
-      <section className="input-wrapper">
+      <section className="">
         <InputWithSelect
           label={'Source Currency'}
           amount={sourceAmount}
@@ -153,8 +151,8 @@ function App() {
       <section>
         <p>
           <small>
-            <strong>NOTE: </strong> 'EURO' is the only Source currency supported due to
-            the API Free tier plan
+            <strong>NOTE: </strong> 'EURO' is the only Source currency supported
+            due to the API Free tier plan
           </small>
         </p>
         <small>

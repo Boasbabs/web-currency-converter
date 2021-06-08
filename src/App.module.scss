@@ -17,14 +17,20 @@ body {
   border: 1px solid #00112c;
   padding: 1.5rem;
   border-radius: 6px;
+
+  h1 {
+    margin: 0;
+    margin-bottom: 0.5rem;
+    color: #0abf53;
+    font-weight: 400;
+  }
+
+  .info-text {
+    margin-top: 1.5rem;
+    line-height: 0.5;
+  }  
 }
 
-h1 {
-  margin: 0;
-  margin-bottom: 0.5rem;
-  color: #0abf53;
-  font-weight: 400;
-}
 
 h3 {
   font-weight: 400;
@@ -39,10 +45,7 @@ a {
   margin-bottom: 3rem;
 }
 
-.info-text {
-  margin-top: 1.5rem;
-  line-height: 0.5;
-}
+
 .info-text-date {
   margin-top: 0.5rem;
   font-size: 12px;

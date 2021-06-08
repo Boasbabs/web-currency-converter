@@ -27,3 +27,4 @@ settings.json
 .prettierignore
 .vscode
 /.vscode
+.zip

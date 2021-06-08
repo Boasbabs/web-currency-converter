@@ -1,11 +1,21 @@
 import styles from './InputWithSelect.module.scss';
 
-const InputWithSelect = ({ amount, label, currencyOptions, selectedCurrency, handleCurrencyChange, handleInputChange }) => {
-
+const InputWithSelect = ({
+  amount,
+  label,
+  currencyOptions,
+  selectedCurrency,
+  handleCurrencyChange,
+  handleInputChange,
+}) => {
   const showCurrencyOptions = () => {
     return currencyOptions.length > 0 ? (
       currencyOptions.map((currency) => (
-        <option data-testid="select-option" key={currency[0]} value={currency[0]}>
+        <option
+          data-testid="select-option"
+          key={currency[0]}
+          value={currency[0]}
+        >
           {currency[1]}
         </option>
       ))
@@ -16,7 +26,7 @@ const InputWithSelect = ({ amount, label, currencyOptions, selectedCurrency, han
 
   return (
     <div className={styles.InputWithSelect}>
-      <label htmlFor="currencyAmount" className={styles.label}>
+      <label htmlFor="currencyAmount" className={styles.InputWithSelect__label}>
         {label}
       </label>
       <input
